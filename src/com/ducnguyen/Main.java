@@ -24,6 +24,7 @@ public class Main {
     public static class FileVisitor extends SimpleFileVisitor<Path> {
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/._*");
         PathMatcher dsStoreMatcher = FileSystems.getDefault().getPathMatcher("glob:**/.DS_Store");
+        PathMatcher hiddenDSStoreMatcher = FileSystems.getDefault().getPathMatcher("glob:**/._.DS_Store");
         PathMatcher thumbDBeMatcher = FileSystems.getDefault().getPathMatcher("glob:**/Thumbs.db");
         long counted = 0;
 
@@ -34,6 +35,7 @@ public class Main {
                     Files.isHidden(file) &&
                     Files.exists(file.resolveSibling(file.getFileName().toString().substring(2))))
                     || dsStoreMatcher.matches(file)
+                    || hiddenDSStoreMatcher.matches(file)
                     || thumbDBeMatcher.matches(file)) {
                 System.out.println(" -- remove: " + file.toAbsolutePath());
                 Files.delete(file);
